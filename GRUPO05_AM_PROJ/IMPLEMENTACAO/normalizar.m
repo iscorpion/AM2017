@@ -1,4 +1,4 @@
-function [X_norm, media, desvio] = normalizarAtributos(X)
+function [X_norm, media, desvio] = normalizar(X)
 %NORMALIZARATRIBUTOS Normaliza os atributos em X 
 %   NORMALIZARATRIBUTOS(X) returna uma versao normalizada de X na qual
 %   a media de cada atributos eh 0 e o desvio padrao eh 1.
