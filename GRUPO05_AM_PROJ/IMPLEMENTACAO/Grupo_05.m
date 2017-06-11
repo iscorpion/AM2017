@@ -22,10 +22,29 @@ clear ; close all; clc
 %% ===================================================== %%
 %% Carregamento dos dados
 
+fprintf('Carregando dados...\n')
+data = csvread("adult_processed.csv");
+
 
 
 %% ===================================================== %%
 %% Preprocessamento dos dados
+
+fprintf('Processando dados...\n')
+
+% Remove primeira linha (cabeçalho)
+data(1, :) = [];
+
+% Remove coluna redundante "education"
+data(:, 4) = [];
+
+X = data(:, 1:end-1);
+Y = data(:, end);
+
+[X_train, Y_train, X_test, Y_test] = holdout(X, Y, 0.7);
+
+fprintf('Dados carregados e processados com sucesso!\n\n')
+
 
 
 %% ===================================================== %%
