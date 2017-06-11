@@ -23,6 +23,6 @@ Y_train = Y(seq(1:split));
 
 % Divisao de X e Y em conjunto de teste
 X_test = X(seq(split+1:end),:);
-Y_test = Y(seq(split+1:end),:);
+Y_test = Y(seq(split+1:end));
 
 end
