@@ -91,6 +91,7 @@ elseif opcao == 4
   lambda = 3;
   maxIterations = 50;
 
-  redeNeural(X, Y, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations)  
+  [Theta1 Theta2 acuracia] = redeNeural(X, Y, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations)  
 endif
 
+% Fazer testes com dados de validacao
