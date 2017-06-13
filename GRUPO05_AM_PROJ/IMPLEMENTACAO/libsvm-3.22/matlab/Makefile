@@ -1,8 +1,8 @@
 # This Makefile is used under Linux
 
-MATLABDIR ?= /usr/local/matlab
+MATLABDIR ?= /Applications/MATLAB_R2017a.app
 # for Mac
-# MATLABDIR ?= /opt/local/matlab
+# MATLABDIR ?= /Applications/MATLAB_R2017a.app
 
 CXX ?= g++
 #CXX = g++-4.1

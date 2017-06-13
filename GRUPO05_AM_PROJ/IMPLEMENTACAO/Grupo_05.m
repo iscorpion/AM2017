@@ -20,8 +20,9 @@
 clear ; close all; clc
 
 addpath('rede_neural');
-addpath('libsvm-3.21/matlab');
-
+addpath('libsvm-3.22');
+addpath('libsvm-3.22/matlab');
+addpath('libsvm-3.22/window');
 %% ===================================================== %%
 %% Carregamento dos dados
 
@@ -107,6 +108,7 @@ while(input1 ~= 0)
       fprintf("Voce escolheu Redes Neurais\n");
     elseif(input2 == 4)
       fprintf("Voce escolheu SVM\n");
+      
     endif
     
   %% ===================================================== %%
@@ -126,6 +128,7 @@ while(input1 ~= 0)
     elseif(input2 == 2)
       fprintf("Voce escolheu Regressao Logistica\n");
     elseif(input2 == 3)
+      fprintf("Voce escolheu Redes Neurais\n");
       input_layer_size  = size(X, 2);  % Numero de colunas de X
       hidden_layer_size = 8;   % 8 neuronios na camada oculta
       num_labels = 2;
@@ -137,6 +140,34 @@ while(input1 ~= 0)
       
     elseif(input2 == 4)
       fprintf("Voce escolheu SVM\n");  
+      fprintf('Iniciando treinamento SVM\n');
+      [X_train, Y_train, X_test, Y_test] = holdout(X_norm, Y, 0.7);
+      SVMStruct = svmtrain(Y_train,X_train,'-c 1 -g 0.07 -t 2');
+      %%Usage: model = svmtrain(training_label_vector, training_instance_matrix, 'libsvm_options')
+      %%-c cost : set the parameter C of C-SVC, epsilon-SVR, and nu-SVR (default 1)\n
+      %%-g gamma : set gamma in kernel function (default 1/num_features)\n
+      %%"-t kernel_type : set type of kernel function (default 2)\n"
+	    %%"	0 -- linear: u'*v\n"
+	    %%"	1 -- polynomial: (gamma*u'*v + coef0)^degree\n"
+	    %%"	2 -- radial basis function: exp(-gamma*|u-v|^2)\n"
+	    %%"	3 -- sigmoid: tanh(gamma*u'*v + coef0)\n"
+	    %%"	4 -- precomputed kernel (kernel values in training_instance_matrix)\n"
+      fprintf('Iniciando prediÁ„o SVM\n');
+      [labels, accuracy, prob] = svmpredict(Y_test, X_test, SVMStruct); % run the SVM model on the test data
+      %%"Usage: [predicted_label, accuracy, decision_values/prob_estimates] = svmpredict(testing_label_vector, testing_instance_matrix, model, 'libsvm_options')\n"
+		  %%"       [predicted_label] = svmpredict(testing_label_vector, testing_instance_matrix, model, 'libsvm_options')\n"
+      %%"Parameters:\n"
+		  %%model: SVM model structure from svmtrain.\n"
+		  %%libsvm_options:\n"
+		  %%  -b probability_estimates: whether to predict probability estimates, 0 or 1 (default 0); one-class SVM not supported yet\n"
+		  %%    -q : quiet mode (no outputs)\n"
+		  %%Returns:\n"
+		  %%  predicted_label: SVM prediction output vector.\n"
+		  %%  accuracy: a vector with accuracy, mean squared error, squared correlation coefficient.\n"
+		  %%  prob_estimates: If selected, probability estimate vector.\n"
+      fprintf('SVM finalizado. Salvando resultados em svm.csv\n');
+      escreverResultado(['svm.csv'], [test_index labels]); %Escreve o resultado do knn em um arquivo csv
+      visualizarDados(teste, labels);
     endif
       
   endif
