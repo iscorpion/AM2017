@@ -20,6 +20,7 @@
 clear ; close all; clc
 
 addpath('rede_neural');
+addpath('libsvm-3.21/matlab');
 
 %% ===================================================== %%
 %% Carregamento dos dados
