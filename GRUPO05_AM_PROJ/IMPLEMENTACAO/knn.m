@@ -5,7 +5,7 @@ function [y, ind_viz] = knn(x, X, Y, K)
 %       ind_viz dos K-vizinhos mais proximos em X.
 %
 %       Parametros de entrada:
-%       -> x (1xn): amostra a ser classificada
+%       -> x (pxn): conjunto de teste
 %       -> X (mxn): base de dados de treinamento
 %       -> Y (mx1): rotulo de cada amostra de X
 %       -> K (1x1): quantidade de vizinhos mais proximos
@@ -18,7 +18,7 @@ function [y, ind_viz] = knn(x, X, Y, K)
 %
 
 %  Inicializa a variavel de retorno e algumas variaveis uteis
-y = 0;                % Inicializa rotulo como classe negativa
+y = zeros(size(x,1),1);                % Inicializa rotulo como classe negativa
 ind_viz = ones(K,1);  % Inicializa indices (linhas) em X das K amostras mais 
                       % proximas de x.
 
@@ -35,13 +35,15 @@ ind_viz = ones(K,1);  % Inicializa indices (linhas) em X das K amostras mais
 
 %  Calcula a distancia entre a amostra de teste x e cada amostra de X. Voce
 %  devera completar essa funcao.
-D = distancia(x, X);
 
-[a i] = sort(D');
-ind_viz = i(1:K);
+for it = 1:size(x,1)
+  D = KNN_distancia(x(it,:), X);
 
-y = mode(Y(ind_viz));
+  [a i] = sort(D');
+  ind_viz = i(1:K);
 
+  y(it) = mode(Y(ind_viz));
+end
 
 % =========================================================================
 

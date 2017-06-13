@@ -1,4 +1,4 @@
-function D = distancia(x, X)
+function D = KNN_distancia(x, X)
 %DISTANCIA calcula a distancia entre a amostra x e todos as amostras da 
 %   base X.
 %   D = DISTANCIA (x, X) retorna um vetor de distancias entre a amostra x 

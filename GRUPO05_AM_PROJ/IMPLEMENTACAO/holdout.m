@@ -15,14 +15,14 @@ num_points = size(X,1);
 % Define o ponto de divisao com base no parametro S
 split = round(num_points*S);
 % Cria uma sequencia aleatoria representando os indices de X
-seq = randperm(num_points);
+%seq = randperm(num_points);
 
 % Divisao de X e Y em conjunto de treinamento
-X_train = X(seq(1:split),:);
-Y_train = Y(seq(1:split));
+X_train = X(1:split,:);
+Y_train = Y(1:split);
 
 % Divisao de X e Y em conjunto de teste
-X_test = X(seq(split+1:end),:);
-Y_test = Y(seq(split+1:end));
+X_test = X(split+1:end,:);
+Y_test = Y(split+1:end);
 
 end
