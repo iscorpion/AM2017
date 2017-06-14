@@ -100,8 +100,44 @@ while(input1 ~= 0)
       t = clock;
       fprintf("\nTime: %02d:%02d\n", t(4), t(5));  
       
-    elseif(input2 == 2)
-      fprintf("Voce escolheu Regressao Logistica\n");
+   elseif(input2 == 2)
+      fprintf("Taxa de Acerto Regressao Logistica\n");
+      
+      rl_historico = zeros(20,1);
+      it = 1;
+      RL_range = -10:10;
+      for I = RL_range
+        [m, n] = size(X);
+
+        X_temp = atributosPolinomiais(X_train(:,1), X_train(:,2));
+        
+        theta_inicial = zeros(size(X_temp, 2), 1);
+        
+        lambda = 10^I;
+
+        [custo, grad] = RL_funcaoCustoReg(theta_inicial, X_temp, Y_train, lambda);
+              
+        opcoes = optimset('GradObj', 'on', 'MaxIter', 400);
+        
+        [theta, J, exit_flag] = ...
+          fminunc(@(t)(RL_funcaoCustoReg(t, X_temp, Y_train, lambda)), theta_inicial, opcoes);
+                    
+        p = RL_predicao(theta, X_temp);
+    
+        %fprintf('Acuracia na base de treinamento: %f\n', mean(double(p == Y_train)) * 100);
+        
+        X_temp = atributosPolinomiais(X_test(:,1), X_test(:,2));
+        classe = RL_predicao(theta, X_temp);
+        
+        fprintf('%.2f%% (lambda = %d)\n', mean(double(classe == Y_test)) * 100, lambda);
+        
+        rl_historico(it) = mean(double(classe == Y_test)) * 100;
+        it = it+1;
+        
+      endfor
+      [rl_historico_max idx] = max(rl_historico);
+      fprintf("Melhor valor de lambda: %d (%.2f%%)\n\n", 10^RL_range(idx), rl_historico_max);
+      
     elseif(input2 == 3)
       fprintf("Voce escolheu Redes Neurais\n");
     elseif(input2 == 4)
