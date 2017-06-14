@@ -148,8 +148,12 @@ while(input1 ~= 0)
       % Teste de valores de lambda de 1 até 10
       for i = 1:10
         lambda = i;
-        [Theta1 Theta2 acuracia acuracia_test] = redeNeural(X_train, Y_train, lambda, input_layer_size, initial_hidden_layer_size, num_labels, maxIterations, X_test, Y_test);
+        [Theta1 Theta2 acuracia] = redeNeural(X_train, Y_train, lambda, input_layer_size, initial_hidden_layer_size, num_labels, maxIterations);
         acuracias(i, 1) = acuracia;
+        
+        pred = RN_predicao(Theta1, Theta2, X_test);
+        acuracia_test = mean(double(pred == Y_test)) * 100;
+        
         acuracias_test(i, 1) = acuracia_test;
       endfor
      
@@ -179,8 +183,12 @@ while(input1 ~= 0)
       min_size = initial_hidden_layer_size - 2;
       for i = 1:6
         hidden_layer_size = i - 1 + min_size;
-        [Theta1 Theta2 acuracia acuracia_test] = redeNeural(X_train, Y_train, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations, X_test, Y_test);
+        [Theta1 Theta2 acuracia] = redeNeural(X_train, Y_train, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations);
         acuracias(i, 1) = acuracia;
+        
+        pred = RN_predicao(Theta1, Theta2, X_test);
+        acuracia_test = mean(double(pred == Y_test)) * 100;
+        
         acuracias_test(i, 1) = acuracia_test;
       endfor
       
@@ -259,17 +267,34 @@ while(input1 ~= 0)
       fprintf("Taxa de acerto media: %.2f%%\n\n", mean(rl_historico));
      
     elseif(input2 == 3)
-      fprintf("Voce escolheu Redes Neurais\n");
-    
-      input_layer_size  = size(X, 2);  % Numero de colunas de X
-      maxIterations = 50;
-      num_labels = 2;
+      fprintf("\nTaxa de Acertos Rede Neural\n");
+ 
+      rede_neural_historico = zeros(5,1);
+ 
+      it = 1;
+      for I = 1:5
+        % K-fold CV com K = 5
+        K = 5;
+        [X_train Y_train X_test Y_test] = kfold(X, Y, K, I);
+ 
+        input_layer_size  = size(X, 2);  % Numero de colunas de X
+        maxIterations = 50;
+        num_labels = 2;
 
-      lambda = 2;
-      hidden_layer_size = 6;
+        lambda = 2;
+        hidden_layer_size = 6;
 
-      [Theta1 Theta2 acuracia] = redeNeural(X, Y, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations)  
+        [Theta1 Theta2 acuracia] = redeNeural(X_train, Y_train, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations);
       
+        fprintf('%.2f%% (Particao = %d)\n', acuracia, I);
+
+        rede_neural_historico(it) = acuracia;
+
+        it = it+1;
+      endfor
+ 
+      fprintf("Taxa de acerto media: %.2f%%\n\n", mean(rede_neural_historico));
+ 
     elseif(input2 == 4)
       fprintf("Voce escolheu SVM\n");  
     endif

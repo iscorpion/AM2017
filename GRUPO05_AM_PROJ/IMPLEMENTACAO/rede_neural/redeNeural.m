@@ -1,4 +1,4 @@
-function [Theta1 Theta2 acuracia acuracia_test] = redeNeural(X, y, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations, X_test, Y_test)
+function [Theta1 Theta2 acuracia] = redeNeural(X, y, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations)
 m = size(X, 1);
 
 %% Inicializando Theta
@@ -28,16 +28,8 @@ Theta2 = reshape(rna_params((1 + (hidden_layer_size * (input_layer_size + 1))):e
 
 %% Predicao
 
-pred = predicao(Theta1, Theta2, X);
+pred = RN_predicao(Theta1, Theta2, X);
 
 acuracia = mean(double(pred == y)) * 100;
-
-fprintf('\nAcuracia no conjunto de treinamento: %f\n', acuracia);
-
-pred = predicao(Theta1, Theta2, X_test);
-
-acuracia_test = mean(double(pred == Y_test)) * 100;
-
-fprintf('\nAcuracia no conjunto de teste: %f\n', acuracia_test);
 
 end
