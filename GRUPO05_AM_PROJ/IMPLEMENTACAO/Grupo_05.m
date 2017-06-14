@@ -123,7 +123,7 @@ while(input1 ~= 0)
           SVMStruct = svmtrain(Y_train, X_train, libsvm_options);
           [labels, accuracy, prob] = svmpredict(Y_test, X_test, SVMStruct);
           
-          fprintf('\n%f% - Valor de c = %f e gama = %f\n', accuracy(1), c, gama);
+          fprintf('\n%f%% - Valor de c = %f e gama = %f\n', accuracy(1), c, gama);
           fflush(stdout);
           if (better_accuracy <= accuracy(1))
             better_accuracy = accuracy(1);
