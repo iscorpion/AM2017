@@ -28,10 +28,8 @@ Theta2 = reshape(rna_params((1 + (hidden_layer_size * (input_layer_size + 1))):e
 
 %% Predicao
 
-pred = predicao(Theta1, Theta2, X);
+pred = RN_predicao(Theta1, Theta2, X);
 
 acuracia = mean(double(pred == y)) * 100;
-
-fprintf('\nAcuracia no conjunto de treinamento: %f\n', acuracia);
 
 end

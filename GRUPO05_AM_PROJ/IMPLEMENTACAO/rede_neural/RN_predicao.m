@@ -1,4 +1,4 @@
-function p = predicao(Theta1, Theta2, X)
+function p = RN_predicao(Theta1, Theta2, X)
 %PREDICAO Prediz o rotulo de uma amostra apresentada a rede neural
 %   p = PREDICAO(Theta1, Theta2, X) prediz o rotulo de X ao utilizar
 %   os pesos treinados na rede neural (Theta1, Theta2)

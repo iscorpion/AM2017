@@ -1,4 +1,4 @@
-function [J, grad] = funcaoCustoReg(theta, X, y, lambda)
+function [J, grad] = RL_funcaoCustoReg(theta, X, y, lambda)
 %FUNCAOCUSTOREG Calcula o custo da regressao logistica com regularizacao
 %   J = FUNCAOCUSTOREG(theta, X, y, lambda) calcula o custo de usar theta 
 %   como parametros da regressao logistica para ajustar os dados de X e y 

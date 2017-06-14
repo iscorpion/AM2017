@@ -20,11 +20,8 @@ D = zeros(m,1); % Inicializa a matriz de distancias D
 %
 
 for i = 1:m
-    D(i) = sqrt((x(1,1)-X(i,1))^2+(x(1,2)-X(i,2))^2);
+    D(i) = sqrt(sum((X(i, :) - x).^2));
 end 
 % =============================================================
 
 end
-
-
-d = distancia(x, X)

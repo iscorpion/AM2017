@@ -1,4 +1,4 @@
-function p = predicao(theta, X)
+function p = RL_predicao(theta, X)
 %PREDICAO Prediz se a entrada pertence a classe 0 ou 1 usando o parametro
 %theta obtido pela regressao logistica
 %   p = PREDICAO(theta, X) calcula a predicao de X usando um 

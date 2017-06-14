@@ -20,9 +20,7 @@
 clear ; close all; clc
 
 addpath('rede_neural');
-addpath('libsvm-3.22/');
-addpath('libsvm-3.22/matlab');
-addpath('libsvm-3.22/window');
+
 %% ===================================================== %%
 %% Carregamento dos dados
 
@@ -77,8 +75,6 @@ while(input1 ~= 0)
     
     input2 = input("\nEscolha um algoritmo:\n1 - k-NN\n2 - Regressao Logistica\n3 - Redes Neurais\n4 - SVM\n\n");
     
-    t = clock;
-    fprintf("\nTime: %02d:%02d\n", t(4), t(5));
     if(input2 == 1)
       fprintf("KNN escolhido\nTestando com valores K de 1 ate 151\n\n");
       
@@ -98,14 +94,120 @@ while(input1 ~= 0)
       endfor
       [knn_max_hist,idx] = max(knn_historico);
       fprintf("\nValor de K escolhido: %d (%.2f%%)\n\n", K_range(idx), knn_max_hist*100);
+            
+   elseif(input2 == 2)
+      fprintf("Taxa de Acerto Regressao Logistica\n");
       
-      t = clock;
-      fprintf("\nTime: %02d:%02d\n", t(4), t(5));  
+      rl_historico = zeros(20,1);
+      it = 1;
+      RL_range = -10:10;
+      for I = RL_range
+        [m, n] = size(X);
+
+        X_temp = atributosPolinomiais(X_train(:,1), X_train(:,2));
+        
+        theta_inicial = zeros(size(X_temp, 2), 1);
+        
+        lambda = 10^I;
+
+        [custo, grad] = RL_funcaoCustoReg(theta_inicial, X_temp, Y_train, lambda);
+              
+        opcoes = optimset('GradObj', 'on', 'MaxIter', 400);
+        
+        [theta, J, exit_flag] = ...
+          fminunc(@(t)(RL_funcaoCustoReg(t, X_temp, Y_train, lambda)), theta_inicial, opcoes);
+                    
+        p = RL_predicao(theta, X_temp);
+    
+        %fprintf('Acuracia na base de treinamento: %f\n', mean(double(p == Y_train)) * 100);
+        
+        X_temp = atributosPolinomiais(X_test(:,1), X_test(:,2));
+        classe = RL_predicao(theta, X_temp);
+        
+        fprintf('%.2f%% (lambda = %d)\n', mean(double(classe == Y_test)) * 100, lambda);
+        
+        rl_historico(it) = mean(double(classe == Y_test)) * 100;
+        it = it+1;
+        
+      endfor
+      [rl_historico_max idx] = max(rl_historico);
+      fprintf("Melhor valor de lambda: %d (%.2f%%)\n\n", 10^RL_range(idx), rl_historico_max);
       
-    elseif(input2 == 2)
-      fprintf("Voce escolheu Regressao Logistica\n");
     elseif(input2 == 3)
       fprintf("Voce escolheu Redes Neurais\n");
+      input_layer_size  = size(X, 2);  % Numero de colunas de X
+      num_labels = 2;
+      
+      initial_hidden_layer_size = ceil((input_layer_size + 2)/2); % Como base, um valor intermediário entre o número de entradas e saídas
+     
+      maxIterations = 50;
+
+      acuracias = zeros(10, 1);
+      acuracias_test = zeros(10, 1);
+      
+      % Teste de valores de lambda de 1 até 10
+      for i = 1:10
+        lambda = i;
+        [Theta1 Theta2 acuracia] = redeNeural(X_train, Y_train, lambda, input_layer_size, initial_hidden_layer_size, num_labels, maxIterations);
+        acuracias(i, 1) = acuracia;
+        
+        pred = RN_predicao(Theta1, Theta2, X_test);
+        acuracia_test = mean(double(pred == Y_test)) * 100;
+        
+        acuracias_test(i, 1) = acuracia_test;
+      endfor
+     
+      fprintf('\nAcuracias na base de treinamento por Lambda\n')
+      for i = 1:10
+        fprintf('%d : %.2f%%\n', i, acuracias(i))
+      endfor
+
+      most_accurate_lambda = 1;
+      
+      fprintf('\nAcuracias na base de teste por Lambda\n')
+      for i = 1:10
+        fprintf('%d : %.2f%%\n', i, acuracias_test(i))
+        if acuracias_test(i) > acuracias_test(most_accurate_lambda)
+          most_accurate_lambda = i;
+        endif
+      endfor
+      
+      lambda = most_accurate_lambda;
+      fprintf('\nO melhor Lambda foi %d\n', lambda)
+      
+      
+      acuracias = zeros(6, 1);
+      acuracias_test = zeros(6, 1);
+           
+      % Teste de valores de hidden_layer_size usando o lambda encontrado
+      min_size = initial_hidden_layer_size - 2;
+      for i = 1:6
+        hidden_layer_size = i - 1 + min_size;
+        [Theta1 Theta2 acuracia] = redeNeural(X_train, Y_train, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations);
+        acuracias(i, 1) = acuracia;
+        
+        pred = RN_predicao(Theta1, Theta2, X_test);
+        acuracia_test = mean(double(pred == Y_test)) * 100;
+        
+        acuracias_test(i, 1) = acuracia_test;
+      endfor
+      
+      fprintf('\nAcuracias na base de treinamento por tamanho da camada oculta\n')
+      for i = 1:6
+        fprintf('%d : %.2f%%\n', i - 1 + min_size, acuracias(i))
+      endfor
+
+      most_accurate_size = 1;
+      
+      fprintf('\nAcuracias na base de teste por tamanho da camada oculta\n')
+      for i = 1:6
+        fprintf('%d : %.2f%%\n', i - 1 + min_size, acuracias_test(i))
+        if acuracias_test(i) > acuracias_test(most_accurate_size)
+          most_accurate_size = i;
+        endif
+      endfor
+      
+      fprintf('\nO melhor tamanho da camada oculta foi %d\n', most_accurate_size)
     elseif(input2 == 4)
       fprintf("Voce escolheu SVM\n\n");
       
@@ -115,9 +217,9 @@ while(input1 ~= 0)
       fprintf("Taxa de Acerto SVM\n");
       fflush(stdout);
       
-      for i = 1:1
+      for i = -1:3
         c = power(2,i);
-        for j = 1:1
+        for j = -1:3
           gama = power(2,j);
           libsvm_options = sprintf('-c %.2f -g %0.f -t 2', c, gama);
           SVMStruct = svmtrain(Y_train, X_train, libsvm_options);
@@ -151,32 +253,94 @@ while(input1 ~= 0)
     if(input2 == 1)
       fprintf("Voce escolheu KNN\n");
     elseif(input2 == 2)
-      fprintf("Voce escolheu Regressao Logistica\n");
-    elseif(input2 == 3)
-      fprintf("Voce escolheu Redes Neurais\n");
-      input_layer_size  = size(X, 2);  % Numero de colunas de X
-      hidden_layer_size = 8;   % 8 neuronios na camada oculta
-      num_labels = 2;
-
-      lambda = 3;
-      maxIterations = 50;
-
-      [Theta1 Theta2 acuracia] = redeNeural(X, Y, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations)  
       
+      fprintf("\nTaxa de Acerto Regressao Logistica\n");
+      rl_historico = zeros(5,1);
+      
+      it = 1;
+      for I = 1:5
+      
+        % K-fold CV com K = 5
+        K = 5;
+        [X_train Y_train X_test Y_test] = kfold(X, Y, K, I);
+
+        X_temp = atributosPolinomiais(X_train(:,1), X_train(:,2));
+        
+        theta_inicial = zeros(size(X_temp, 2), 1);
+        
+        lambda = 10^4;
+
+        [custo, grad] = RL_funcaoCustoReg(theta_inicial, X_temp, Y_train, lambda);
+              
+        opcoes = optimset('GradObj', 'on', 'MaxIter', 400);
+        
+        [theta, J, exit_flag] = ...
+          fminunc(@(t)(RL_funcaoCustoReg(t, X_temp, Y_train, lambda)), theta_inicial, opcoes);
+                    
+        p = RL_predicao(theta, X_temp);
+    
+        %fprintf('Acuracia na base de treinamento: %f\n', mean(double(p == Y_train)) * 100);
+        
+        X_temp = atributosPolinomiais(X_test(:,1), X_test(:,2));
+        classe = RL_predicao(theta, X_temp);
+        
+        fprintf('%.2f%% (Particao = %d)\n', mean(double(classe == Y_test)) * 100, I);
+        
+        rl_historico(it) = mean(double(classe == Y_test)) * 100;
+        it = it+1;
+        
+      endfor
+      fprintf("Taxa de acerto media: %.2f%%\n\n", mean(rl_historico));
+     
+    elseif(input2 == 3)
+      fprintf("\nTaxa de Acertos Rede Neural\n");
+ 
+      rede_neural_historico = zeros(5,1);
+ 
+      it = 1;
+      for I = 1:5
+        % K-fold CV com K = 5
+        K = 5;
+        [X_train Y_train X_test Y_test] = kfold(X, Y, K, I);
+ 
+        input_layer_size  = size(X, 2);  % Numero de colunas de X
+        maxIterations = 50;
+        num_labels = 2;
+
+        lambda = 2;
+        hidden_layer_size = 6;
+
+        [Theta1 Theta2 acuracia] = redeNeural(X_train, Y_train, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations);
+      
+        fprintf('%.2f%% (Particao = %d)\n', acuracia, I);
+
+        rede_neural_historico(it) = acuracia;
+
+        it = it+1;
+      endfor
+ 
+      fprintf("Taxa de acerto media: %.2f%%\n\n", mean(rede_neural_historico));
+ 
     elseif(input2 == 4)
       fprintf("Voce escolheu SVM\n");  
-      fprintf('Iniciando treinamento SVM\n');
-      [X_train, Y_train, X_test, Y_test] = holdout(X_norm, Y, 0.7);
-      %% Segundo os testes que podem ser replicados pelas opçÕes 1 e 4 destes trabalho,
-      %% os melhores parametros para esse problema são c=2 e gama = 0.5
-      SVMStruct = svmtrain(Y_train,X_train,'-c 2 -g 0.5 -t 2');
-      fprintf('Iniciando prediÁ„o SVM\n');
-      [labels, accuracy, prob] = svmpredict(Y_test, X_test, SVMStruct); % run the SVM model on the test data
-      fprintf('\nAcuracia no conjunto de treinamento: %f\n', accuracy);
+      svm_historico = zeros(5,1);
+      it = 1;
+      for I = 1:5
+        % K-fold CV com K = 5
+        K = 5;
+        [X_train Y_train X_test Y_test] = kfold(X, Y, K, I);
       
-      %%fprintf('SVM finalizado. Salvando resultados em svm.csv\n');
-      %%escreverResultado(['svm.csv'], [Y_test labels]); %Escreve o resultado do knn em um arquivo csv
-      visualizarDados(X_test, labels);
+        %% Segundo os testes que podem ser replicados pelas opçÕes 1 e 4 destes trabalho,
+        %% os melhores parametros para esse problema são c=2 e gama = 0.5
+        SVMStruct = svmtrain(Y_train,X_train,'-c 2 -g 0.5 -t 2');
+        fprintf('Iniciando prediÁ„o SVM\n');
+        [labels, accuracy, prob] = svmpredict(Y_test, X_test, SVMStruct); % run the SVM model on the test data
+        fprintf('\nAcuracia no conjunto de treinamento: %f\n', accuracy(1));
+        
+        svm_historico = accuracy(1)
+        it = it+1
+      endfor  
+      fprintf("Taxa de acerto media: %.2f%%\n\n", mean(svm_historico));
     endif
       
   endif
