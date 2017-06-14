@@ -1,0 +1,328 @@
+%% bare_conf.tex
+%% V1.3
+%% 2007/01/11
+%% by Michael Shell
+%% See:
+%% http://www.michaelshell.org/
+%% for current contact information.
+%%
+%% This is a skeleton file demonstrating the use of IEEEtran.cls
+%% (requires IEEEtran.cls version 1.7 or later) with an IEEE conference paper.
+%%
+%% Support sites:
+%% http://www.michaelshell.org/tex/ieeetran/
+%% http://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/
+%% and
+%% http://www.ieee.org/
+
+%%*************************************************************************
+%% Legal Notice:
+%% This code is offered as-is without any warranty either expressed or
+%% implied; without even the implied warranty of MERCHANTABILITY or
+%% FITNESS FOR A PARTICULAR PURPOSE! 
+%% User assumes all risk.
+%% In no event shall IEEE or any contributor to this code be liable for
+%% any damages or losses, including, but not limited to, incidental,
+%% consequential, or any other damages, resulting from the use or misuse
+%% of any information contained here.
+%%
+%% All comments are the opinions of their respective authors and are not
+%% necessarily endorsed by the IEEE.
+%%
+%% This work is distributed under the LaTeX Project Public License (LPPL)
+%% ( http://www.latex-project.org/ ) version 1.3, and may be freely used,
+%% distributed and modified. A copy of the LPPL, version 1.3, is included
+%% in the base LaTeX documentation of all distributions of LaTeX released
+%% 2003/12/01 or later.
+%% Retain all contribution notices and credits.
+%% ** Modified files should be clearly indicated as such, including  **
+%% ** renaming them and changing author support contact information. **
+%%
+%% File list of work: IEEEtran.cls, IEEEtran_HOWTO.pdf, bare_adv.tex,
+%%                    bare_conf.tex, bare_jrnl.tex, bare_jrnl_compsoc.tex
+%%*************************************************************************
+
+% *** Authors should verify (and, if needed, correct) their LaTeX system  ***
+% *** with the testflow diagnostic prior to trusting their LaTeX platform ***
+% *** with production work. IEEE's font choices can trigger bugs that do  ***
+% *** not appear when using other class files.                            ***
+% The testflow support page is at:
+% http://www.michaelshell.org/tex/testflow/
+
+
+
+% Note that the a4paper option is mainly intended so that authors in
+% countries using A4 can easily print to A4 and see how their papers will
+% look in print - the typesetting of the document will not typically be
+% affected with changes in paper size (but the bottom and side margins will).
+% Use the testflow package mentioned above to verify correct handling of
+% both paper sizes by the user's LaTeX system.
+%
+% Also note that the "draftcls" or "draftclsnofoot", not "draft", option
+% should be used if it is desired that the figures are to be displayed in
+% draft mode.
+%
+\documentclass[10pt, conference, compsocconf]{IEEEtran}
+
+% Linha adicionada para permitir o uso de acentos e cedilha
+
+\usepackage[utf8x]{inputenc}
+
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+%
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+\title{Censo 1994 – Quem ganha mais de 50 mil?}
+
+
+% author names and affiliations
+% use a multiple column layout for up to two different
+% affiliations
+
+\author{\IEEEauthorblockN{Celso M. Araujo Filho, Renan F. Almeida, Vinnícius F. Silva}
+\IEEEauthorblockA{Departamento de Computação (DComp)\\
+Universidade Federal de São Carlos (UFSCar)\\
+18052-780, Sorocaba, São Paulo, Brasil\\
+celsofilho95@gmail.com, renanfalmeida@outlook.com, vinniciusfs@hotmail.com}
+%\and
+%\IEEEauthorblockN{Authors Name/s per 2nd Affiliation (Author)}
+%\IEEEauthorblockA{line 1 (of Affiliation): dept. name of organization\\
+%line 2: name of organization, acronyms acceptable\\
+%line 3: City, Country\\
+%line 4: Email: name@xyz.com}
+}
+
+
+% make the title area
+\maketitle
+
+
+\begin{abstract}
+Na área de Aprendizado de Máquina, a utilização de censos demográficos em problemas de classificação tem se mostrado cada vez mais interessante e extremamente benéfica para pesquisas. A proposta desse trabalho é apresentar a análise de diferentes métodos de aprendizado de máquina utilizados em problemas de classificação para determinar quais indivíduos possuem renda maior a 50 mil, com base nos diversos atributos coletados para cada indivíduo. Para os experimentos, foi utilizado um censo real, realizado em 1994 nos Estados Unidos. Os métodos de classificação foram validados com a técnica de validação cruzada com 5 partições. Os métodos de Redes Neurais Artificiais e Máquinas de Vetores de Suporte apresentaram o melhor desempenho.
+
+\end{abstract}
+
+\begin{IEEEkeywords}
+censo; renda; classificação.
+
+\end{IEEEkeywords}
+
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
+
+
+
+\section{Introdução}
+Censos são instrumentais para o desenvolvimento do conhecimento humano, consistindo na aquisição e recordação de informações sobre membros de uma dada população, tais como censos de agricultura, indústria e motoristas. Seu uso é variado, podendo ser usado em pesquisas, \textit{marketing} e planejamento de negócios. 
+
+Através de um censo, é possível identificar características entre os indivíduos da população, e usar esse conhecimento várias maneiras, como estabelecer uma relação causal entre certos atributos.
+
+Um dos censos mais realizados é o de renda, familiar ou \textit{per capita}. Através destes, é possível criar índices de desigualdade de renda entre os habitantes da região estudada pelo senso.
+
+De tal maneira, esse trabalho propõe a aplicação de diferentes métodos de aprendizado de máquina para classificação, a fim de identificar, a partir de uma série de atributos, quais indivíduos possuem uma renda anual superior a 50 mil, utilizando os métodos $k$-vizinhos mais próximos, regressão logística, redes neurais artificiais e máquinas de vetores de suporte, que são métodos consagrados na área de problemas de classificação.
+
+Dentre as técnicas utilizadas, temos a busca em \textit{grid}, também conhecida como otimização de hiperparâmetros, o \textit{holdout}, uma simples divisão dos dados originais em conjuntos de treinamento e de teste seguindo uma proporção definida, e a validação cruzada com $k$ partições. O número escolhido para esse projeto foi $k = 5$, um número adequado para bases de dados de tamanho pequeno a médio.
+
+\section{Base de Dados}
+A base de dados utilizada no trabalho é um censo realizado nos Estados Unidos, em 1994, pelo \textit{United States Census Bureau}\footnote{www.census.gov/}. Trata-se de uma amostra reduzida dos dados reais, parte do repositório de Aprendizado de Máquina da UCI, disponível no \textit{website} Kaggle\footnote{www.kaggle.com/uciml/adult-census-income}. 
+
+Há 32561 amostras na base, distribuídas em duas classes: quem ganha menos que 50 mil (75,9\%) e aqueles que ganham mais de 50 mil (24,1\%). Todas as amostras possuem modestos 14 atributos com dados demográficos. Destes, 6 atributos são numéricos, e os outros 8 são nominais. Os atributos são descritos a seguir.
+
+\begin{itemize}
+	\item Idade, com valores de 17 até 90 anos;
+    \item Setor de trabalho: setor privado, nunca trabalhou, servidor público, etc.;
+    \item \textit{Final Weight}: Um peso calculado pelo \textit{U.S. Census Bureau}, indicando o grupo social do indivíduo.
+    \item Educação e número de educação: O grau de educação do cidadão, de pré-escola até doutorado, e o respectivo número, de 1 a 16;
+    \item Estado Conjugal: solteiro, casado, viúvo, etc.;
+    \item Ocupação: o cargo do indivíduo;
+    \item Relacionamento familiar;
+    \item Grupo étnico;
+    \item Sexo: Masculino ou Feminino;
+    \item Excedente de capital;
+    \item Déficit de capital;
+    \item Número de horas de trabalho por semana
+    \item País Nativo.
+\end{itemize}
+
+Os métodos de classificação utilizados não foram ajustados para compatibilidade com atributos nominais. Assim, foi realizada a transformação dos atributos nominais em atributos numéricos através da atribuição de um número inteiro para cada valor possível, a partir do número 1. 
+
+Para o atributo de Educação, a transformação de Educação em números seria redundante com o atributo Número de Educação. Com isso, decidiu-se descartar o atributo Educação, visto que o Número de Educação é suficiente para os propósitos de informação.
+
+Há, no entanto, amostras com valores desconhecidos, indicados por '?', totalizando 2399 (7,37\%) amostras incompletas. Entre as opções de deleção de amostras e preenchimento dos valores, optou-se por atribuir um número diferente dos outros para os valores desconhecidos.
+
+As transformações foram feitas através de substituição de texto. Um arquivo alternativo à base original de dados está na pasta do projeto. Para mais detalhes sobre os valores atribuídos a cada campo, ver o arquivo "Campos e possíveis valores.txt".
+
+
+\section{Metodologia Experimental}
+Neste trabalho foram avaliados os seguintes métodos de classificação: \textit{k}-vizinhos mais próximos (KNN), regressão logística (RL), redes neurais artificiais (ANN) e máquinas de vetores de suporte (SVM).
+
+Todos os métodos citados têm desempenho sensível ao ajuste de seus parâmetros. Para uma escolha adequada ao conjunto de dados utilizado, foi utilizada a técnica de busca em \textit{grid}, com variações pré-determinadas nos parâmetros. Nesta fase, foi feito um \textit{holdout} dos dados, criando uma divisão em conjunto de treinamento (70\% dos dados) e conjunto de teste (30\% dos dados). 
+
+Por questões de simplicidade e confiabilidade de escolha, a escolha de amostras no \textit{holdout} não é feita aleatoriamente, mas para as mesmas amostras toda vez que o programa é executado, considerando que o conjunto de dados não seja alterado.
+
+O critério de escolha dos parâmetros é descrito a seguir.
+
+\begin{itemize}
+\item O valor de $K$ no método $k$-vizinhos mais próximos, testado com valores ímpares de 1 até 51.
+\item O valor de $\lambda$, o fator de regularização do método de regressão logística, variando de $10^{-10}$ até $10^{10}$, com incrementos de 1 na potência.
+\item No método Redes neurais, o fator de regularização $\lambda$, com valores de 0 a 10, incrementados de 1 unidade, e o número de nós na camada oculta, de 6 a 11, com incrementos de 1 unidade.
+\item No método SVM, foram testados os parâmetros $C$, para valores de 0,5 até 8, com cada iteração dobrando o valor anterior, e valores para $\gamma$ de 0,5 a 8, seguindo o mesmo crescimento de $C$ Cada valor de $C$ foi testado com todos os valores de $\gamma$, totalizando 27 testes.
+\end{itemize}
+
+Realizada a busca em \textit{grid}, foram selecionados e utilizados os seguintes parâmetros.
+
+\begin{itemize}
+\item $k$-vizinhos mais próximos -- $K = 25$;
+\item Regressão logística -- $\lambda = 10^{4}$;
+\item Redes neurais -- $\lambda = 2$, \textit{hidden layer size} = 6;
+\item SVM -- $C = 2$, $\gamma = 0,5$.
+\end{itemize}
+
+Para a implementação do método de máquina de vetores auxiliares, foi utilizada a biblioteca LIBSVM para MATLAB/Octave.
+
+Na fase experimental, não é utilizado o \textit{holdout}, mas sim uma validação cruzada com 5 partições. Assim, cada execução treina e testa cinco vezes e toda amostra é utilizada no conjunto de treino e, em outro momento, utilizada no conjunto de teste.
+
+Considerando o uso da validação cruzada, a medida final de desempenho será a média de acurácia -- a porcentagem de amostras corretamente classificadas -- de cada uma das cinco partições de conjunto de teste utilizadas.
+
+\section{Resultados}
+
+O método $k$-vizinhos mais próximos não pôde ser corretamente avaliado. Por problemas na implementação, o algoritmo está ineficiente e não parece produzir resultados para conjuntos que não sejam bastante pequenos.
+
+A acurácia do método de regressão logística, com $\lambda = 10^{4}$ pode ser observada na Tabela I. 
+
+\begin{table}[t]
+\centering
+\caption{Acurácia do Método de Regressão Logística}
+\label{rl}
+\begin{tabular}{l|l|l|l|l|l|l}
+\hline\hline
+\textbf{Partição} & 1    & 2    & 3    & 4    & 5    & \textbf{Média} \\ \hline
+\textbf{Acurácia (\%)}                 & 55,4 & 81,6 & 80,9 & 80,9 & 80,8 & \textbf{75,9}  \\ \hline
+\hline
+\end{tabular}
+\end{table}
+
+Para a validação do método de redes neurais artificiais, com fator de regularização $\lambda = 2$ e número de nós na camada oculta = 8, a acurácia pode ser vista na Tabela II.
+
+\begin{table}[t]
+\centering
+\caption{Acurácia do Método de Redes Neurais Artificiais}
+\label{ann}
+\begin{tabular}{l|l|l|l|l|l|l}
+\hline\hline
+\textbf{Partição} & 1    & 2    & 3    & 4    & 5    & \textbf{Média} \\ \hline
+\textbf{Acurácia (\%)} & 81,0 & 74,6 & 74,7 & 79,0 & 74,7 & \textbf{76,8}  \\ \hline
+\hline
+\end{tabular}
+\end{table}
+
+Os resultados de acurácia do método SVM podem ser notados na Tabela III, com os parâmetros $C = 2$ e $\gamma = 0,5$.
+
+\begin{table}[t]
+\centering
+\caption{Acurácia do Método Máquinas de Vetores Auxiliares}
+\label{svm}
+\begin{tabular}{l|l|l|l|l|l|l}
+\hline\hline
+\textbf{Partição} & 1    & 2    & 3    & 4    & 5    & \textbf{Média} \\ \hline
+\textbf{Acurácia (\%)} & 55,4 & 81,6 & 80,9 & 81,0 & 80,8 & \textbf{80,8}  \\ \hline
+\hline
+\end{tabular}
+\end{table}
+
+Considerando o contexto do problema, o desempenho é satisfatório, mas para aplicações mais cruciais, onde o erro é severamente penalizado, seriam necessários ajustes nos algoritmos e nos dados.
+
+\begin{table}[t]
+\centering
+\caption{Acurácia do Método K-vizinhos mais próximos}
+\label{knn}
+\begin{tabular}{l|l|l|l|l|l|l}
+\hline\hline
+\textbf{Partição} & 1    & 2    & 3    & 4    & 5    & \textbf{Média} \\ \hline
+\textbf{Acurácia (\%)} & 0 & 0 & 0 & 0 & 0 & \textbf{0}  \\ \hline
+\hline
+\end{tabular}
+\end{table}
+
+\section{Conclusões}
+
+Dentre os métodos corretamente testados, o melhor foi o SVM, com acurácia 5\% maior que os outros métodos testados, o que o torna a melhor escolha para uma alta acurácia de classificação. 
+
+Se a qualidade desejada é consistência, o método recomendado é o de Redes Neurais Artificiais. Sua acurácia total não excepcional comparada com a de outros métodos, mas é o método mais consistente, com menor desvio nos valores, e sua acurácia para bases maiores é mantida, ainda que o desempenho sofra.
+
+Por outro lado, dada a simplicidade do método de regressão logística e seu desempenho sólido, é também uma escolha recomendável para o problema
+
+Uma possível medida para se melhorar o desempenho seria uma transformação mais criteriosa dos atributos descritivos em numéricos. Atributos nominais não possuem ordem entre si -- como 'azul', 'branco' --, então atribuir números sequenciais a estes atributos pode causar hipóteses fracas.
+
+Atributos com muitos valores possíveis, como País, poderiam antes ser agrupados em blocos -- como por regiões --, e depois codificados em cadeias de \textit{bits}, de maneira que a distância de Hamming entre todas as amostras fosse 1.
+
+% conference papers do not normally have an appendix
+\begin{appendix}
+
+Para a utilização do projeto, basta executar o arquivo Grupo\_05.m. Imediatamente, o programa imprime algumas mensagens, indicando o carregamento e pré-processamento dos dados. Em seguida, imprime-se o menu principal, onde o usuário deverá escolher uma das opções seguintes.
+\begin{itemize}
+\item Teste de Parâmetros;
+\item Classificação dos Dados;
+\item Sair.
+\end{itemize}
+
+As opções são representadas pelos números 1, 2 e 0, respectivamente. Enquanto o usuário não digitar um desses números, uma entrada válida continuará sendo pedida.
+
+A opção 1 refere-se à escolha dos parâmetros de cada método, sendo realizada uma busca em \textit{grid}, como detalhado anteriormente. Ao selecionar essa opção, o usuário deverá escolher um dos quatro métodos de classificação. A acurácia do método para diferentes valores será imprimida na tela, e o usuário será levado de volta ao menu principal.
+
+Ao escolher a opção 2, o usuário deverá escolher um dos quatro métodos de classificação, que serão utilizados para classificar o conjunto de dados. A acurácia final do método será exibida na tela, e o usuário volta para o menu principal. É importante notar que a opção 2 é independente da opção 1. A escolha dos parâmetros para a classificação já foi codificada com base nos experimentos.
+
+Satisfeito com os testes realizados, selecionar a opção Sair do menu principal finalizará a execução do programa.
+
+\end{appendix}
+
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{8}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
+
+% references section
+
+% can use a bibliography generated by BibTeX as a .bbl file
+% BibTeX documentation can be easily obtained at:
+% http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
+% The IEEEtran BibTeX style support page is at:
+% http://www.michaelshell.org/tex/ieeetran/bibtex/
+%\bibliographystyle{IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+%\bibliography{IEEEabrv,../bib/paper}
+%
+% <OR> manually copy in the resultant .bbl file
+% set second argument of \begin to the number of references
+% (used to reserve space for the reference number labels box)
+\begin{thebibliography}{1}
+
+\bibitem{jhony}
+J. M. Campanha, J. V. Lochter e T. A. Almeida, \emph{Detecção automática de spammers em redes sociais}, \hskip 1em plus 0.5em minus 0.4em\relax Anais do XI Encontro Nacional de Inteligência Artificial e Computacional (ENIAC '14), São Carlos, Brasil, 2014
+
+\end{thebibliography}
+
+
+
+
+% that's all folks
+\end{document}
+
+

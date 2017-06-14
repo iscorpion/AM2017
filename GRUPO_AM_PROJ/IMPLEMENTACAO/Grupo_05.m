@@ -288,7 +288,7 @@ while(input1 ~= 0)
         classe = RL_predicao(theta, X_temp);
         
         fprintf('%.2f%% (Particao = %d)\n', mean(double(classe == Y_test)) * 100, I);
-        
+        fflush(stdout);
         rl_historico(it) = mean(double(classe == Y_test)) * 100;
         it = it+1;
         
@@ -316,7 +316,7 @@ while(input1 ~= 0)
         [Theta1 Theta2 acuracia] = redeNeural(X_train, Y_train, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations);
       
         fprintf('%.2f%% (Particao = %d)\n', acuracia, I);
-
+fflush(stdout);
         rede_neural_historico(it) = acuracia;
 
         it = it+1;
@@ -339,7 +339,7 @@ while(input1 ~= 0)
         fprintf('Iniciando prediÁ„o SVM\n');
         [labels, accuracy, prob] = svmpredict(Y_test, X_test, SVMStruct); % run the SVM model on the test data
         fprintf('\nAcuracia no conjunto de treinamento: %f\n', accuracy(1));
-        
+        fflush(stdout);
         svm_historico = accuracy(1)
         it = it+1
       endfor  
