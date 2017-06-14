@@ -135,6 +135,71 @@ while(input1 ~= 0)
       
     elseif(input2 == 3)
       fprintf("Voce escolheu Redes Neurais\n");
+      input_layer_size  = size(X, 2);  % Numero de colunas de X
+      num_labels = 2;
+      
+      initial_hidden_layer_size = ceil((input_layer_size + 2)/2); % Como base, um valor intermediário entre o número de entradas e saídas
+     
+      maxIterations = 50;
+
+      acuracias = zeros(10, 1);
+      acuracias_test = zeros(10, 1);
+      
+      % Teste de valores de lambda de 1 até 10
+      for i = 1:10
+        lambda = i;
+        [Theta1 Theta2 acuracia acuracia_test] = redeNeural(X_train, Y_train, lambda, input_layer_size, initial_hidden_layer_size, num_labels, maxIterations, X_test, Y_test);
+        acuracias(i, 1) = acuracia;
+        acuracias_test(i, 1) = acuracia_test;
+      endfor
+     
+      fprintf('\nAcuracias na base de treinamento por Lambda\n')
+      for i = 1:10
+        fprintf('%d : %.2f%%\n', i, acuracias(i))
+      endfor
+
+      most_accurate_lambda = 1;
+      
+      fprintf('\nAcuracias na base de teste por Lambda\n')
+      for i = 1:10
+        fprintf('%d : %.2f%%\n', i, acuracias_test(i))
+        if acuracias_test(i) > acuracias_test(most_accurate_lambda)
+          most_accurate_lambda = i;
+        endif
+      endfor
+      
+      lambda = most_accurate_lambda;
+      fprintf('\nO melhor Lambda foi %d\n', lambda)
+      
+      
+      acuracias = zeros(6, 1);
+      acuracias_test = zeros(6, 1);
+           
+      % Teste de valores de hidden_layer_size usando o lambda encontrado
+      min_size = initial_hidden_layer_size - 2;
+      for i = 1:6
+        hidden_layer_size = i - 1 + min_size;
+        [Theta1 Theta2 acuracia acuracia_test] = redeNeural(X_train, Y_train, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations, X_test, Y_test);
+        acuracias(i, 1) = acuracia;
+        acuracias_test(i, 1) = acuracia_test;
+      endfor
+      
+      fprintf('\nAcuracias na base de treinamento por tamanho da camada oculta\n')
+      for i = 1:6
+        fprintf('%d : %.2f%%\n', i - 1 + min_size, acuracias(i))
+      endfor
+
+      most_accurate_size = 1;
+      
+      fprintf('\nAcuracias na base de teste por tamanho da camada oculta\n')
+      for i = 1:6
+        fprintf('%d : %.2f%%\n', i - 1 + min_size, acuracias_test(i))
+        if acuracias_test(i) > acuracias_test(most_accurate_size)
+          most_accurate_size = i;
+        endif
+      endfor
+      
+      fprintf('\nO melhor tamanho da camada oculta foi %d\n', most_accurate_size)
     elseif(input2 == 4)
       fprintf("Voce escolheu SVM\n");
     endif
@@ -194,12 +259,14 @@ while(input1 ~= 0)
       fprintf("Taxa de acerto media: %.2f%%\n\n", mean(rl_historico));
      
     elseif(input2 == 3)
+      fprintf("Voce escolheu Redes Neurais\n");
+    
       input_layer_size  = size(X, 2);  % Numero de colunas de X
-      hidden_layer_size = 8;   % 8 neuronios na camada oculta
+      maxIterations = 50;
       num_labels = 2;
 
-      lambda = 3;
-      maxIterations = 50;
+      lambda = 2;
+      hidden_layer_size = 6;
 
       [Theta1 Theta2 acuracia] = redeNeural(X, Y, lambda, input_layer_size, hidden_layer_size, num_labels, maxIterations)  
       
