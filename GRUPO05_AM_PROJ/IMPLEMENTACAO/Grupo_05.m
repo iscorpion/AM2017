@@ -20,7 +20,7 @@
 clear ; close all; clc
 
 addpath('rede_neural');
-addpath('libsvm-3.22');
+addpath('libsvm-3.22/');
 addpath('libsvm-3.22/matlab');
 addpath('libsvm-3.22/window');
 %% ===================================================== %%
@@ -107,8 +107,33 @@ while(input1 ~= 0)
     elseif(input2 == 3)
       fprintf("Voce escolheu Redes Neurais\n");
     elseif(input2 == 4)
-      fprintf("Voce escolheu SVM\n");
+      fprintf("Voce escolheu SVM\n\n");
       
+      better_accuracy = 0.0;
+      better_c = 0.0;
+      better_gama = 0.0;
+      fprintf("Taxa de Acerto SVM\n");
+      fflush(stdout);
+      
+      for i = 1:1
+        c = power(2,i);
+        for j = 1:1
+          gama = power(2,j);
+          libsvm_options = sprintf('-c %.2f -g %0.f -t 2', c, gama);
+          SVMStruct = svmtrain(Y_train, X_train, libsvm_options);
+          [labels, accuracy, prob] = svmpredict(Y_test, X_test, SVMStruct);
+          
+          fprintf('\n%f% - Valor de c = %f e gama = %f\n', accuracy(1), c, gama);
+          fflush(stdout);
+          if (better_accuracy <= accuracy(1))
+            better_accuracy = accuracy(1);
+            better_c = c;
+            better_gama = gama;
+          endif
+        endfor
+      endfor
+      fprintf("\nMelhores parametros testados foram c = %f e gama = %f, com acuracia de %f%%.\n", better_c, better_gama, better_accuracy);
+      fflush(stdout);
     endif
     
   %% ===================================================== %%
@@ -142,32 +167,16 @@ while(input1 ~= 0)
       fprintf("Voce escolheu SVM\n");  
       fprintf('Iniciando treinamento SVM\n');
       [X_train, Y_train, X_test, Y_test] = holdout(X_norm, Y, 0.7);
-      SVMStruct = svmtrain(Y_train,X_train,'-c 1 -g 0.07 -t 2');
-      %%Usage: model = svmtrain(training_label_vector, training_instance_matrix, 'libsvm_options')
-      %%-c cost : set the parameter C of C-SVC, epsilon-SVR, and nu-SVR (default 1)\n
-      %%-g gamma : set gamma in kernel function (default 1/num_features)\n
-      %%"-t kernel_type : set type of kernel function (default 2)\n"
-	    %%"	0 -- linear: u'*v\n"
-	    %%"	1 -- polynomial: (gamma*u'*v + coef0)^degree\n"
-	    %%"	2 -- radial basis function: exp(-gamma*|u-v|^2)\n"
-	    %%"	3 -- sigmoid: tanh(gamma*u'*v + coef0)\n"
-	    %%"	4 -- precomputed kernel (kernel values in training_instance_matrix)\n"
+      %% Segundo os testes que podem ser replicados pelas opçÕes 1 e 4 destes trabalho,
+      %% os melhores parametros para esse problema são c=2 e gama = 0.5
+      SVMStruct = svmtrain(Y_train,X_train,'-c 2 -g 0.5 -t 2');
       fprintf('Iniciando prediÁ„o SVM\n');
       [labels, accuracy, prob] = svmpredict(Y_test, X_test, SVMStruct); % run the SVM model on the test data
-      %%"Usage: [predicted_label, accuracy, decision_values/prob_estimates] = svmpredict(testing_label_vector, testing_instance_matrix, model, 'libsvm_options')\n"
-		  %%"       [predicted_label] = svmpredict(testing_label_vector, testing_instance_matrix, model, 'libsvm_options')\n"
-      %%"Parameters:\n"
-		  %%model: SVM model structure from svmtrain.\n"
-		  %%libsvm_options:\n"
-		  %%  -b probability_estimates: whether to predict probability estimates, 0 or 1 (default 0); one-class SVM not supported yet\n"
-		  %%    -q : quiet mode (no outputs)\n"
-		  %%Returns:\n"
-		  %%  predicted_label: SVM prediction output vector.\n"
-		  %%  accuracy: a vector with accuracy, mean squared error, squared correlation coefficient.\n"
-		  %%  prob_estimates: If selected, probability estimate vector.\n"
-      fprintf('SVM finalizado. Salvando resultados em svm.csv\n');
-      escreverResultado(['svm.csv'], [test_index labels]); %Escreve o resultado do knn em um arquivo csv
-      visualizarDados(teste, labels);
+      fprintf('\nAcuracia no conjunto de treinamento: %f\n', accuracy);
+      
+      %%fprintf('SVM finalizado. Salvando resultados em svm.csv\n');
+      %%escreverResultado(['svm.csv'], [Y_test labels]); %Escreve o resultado do knn em um arquivo csv
+      visualizarDados(X_test, labels);
     endif
       
   endif

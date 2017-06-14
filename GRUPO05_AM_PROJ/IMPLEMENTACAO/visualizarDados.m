@@ -12,7 +12,7 @@ figure; hold on;
 % a opcao 'k+' para exemplos positivos e 'ko' para os negativos
 
 % Encontra os indices das amostras positivas (pos) e negativas (neg)
-pos = find(Y==1); neg = find(Y == 0);
+pos = find(Y==2); neg = find(Y == 1);
 
 % Plota as amostras
 plot(X(pos, 1), X(pos, 2), 'b+','LineWidth', 2, 'MarkerSize', 7);
